@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import AttendanceChart from './Graph';
-require('dotenv').config();
+// require('dotenv').config();
 
 
 const SimpleForm = () => {

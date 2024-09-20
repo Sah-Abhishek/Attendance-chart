@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 4000;
 
 async function scrapeClassAttendance(userName, password) {
     const browser = await puppeteer.launch();
-
+    try{
     const page = await browser.newPage();
     await page.goto('https://erp.rkgit.edu.in/', { waitUntil: 'networkidle2' });
 
@@ -70,6 +70,11 @@ async function scrapeClassAttendance(userName, password) {
     percentages = percentages.map(p => p.replace('%', ''));
 
     return { dates, percentages };
+    }catch (error){
+        console.log("There was an error while scraping", error);
+    }finally{
+        await browser.close();
+    }
 }
 
 
@@ -101,6 +106,6 @@ app.post('/api/attendance', async (req, res) => {
 
 
 app.listen(PORT, async () => {
-    console.log("Server is listening on port 3000");
+    console.log(`Server is listening on port ${PORT}`);
     
 });
