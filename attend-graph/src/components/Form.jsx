@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import AttendanceChart from './Graph';
+require('dotenv').config();
 
 
 const SimpleForm = () => {
@@ -17,7 +18,7 @@ const SimpleForm = () => {
     setLoading(true); // Start Loading
 
     try {
-      const response = await axios.post('http://localhost:3000/api/attendance', {
+      const response = await axios.post('http://localhost:4000/api/attendance', {
         userName,
         password,
       });

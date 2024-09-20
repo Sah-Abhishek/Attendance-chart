@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 app.use(express.json());
 app.use(cors());
+const PORT = process.env.PORT || 4000;
 
 
 async function scrapeClassAttendance(userName, password) {
@@ -93,7 +94,7 @@ app.post('/api/attendance', async (req, res) => {
 })
 
 
-app.listen(3000, async () => {
+app.listen(PORT, async () => {
     console.log("Server is listening on port 3000");
     
 });
