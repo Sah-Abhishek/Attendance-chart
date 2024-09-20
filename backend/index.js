@@ -1,6 +1,7 @@
 const express = require('express');
 const puppeteer = require('puppeteer');
 const cors = require('cors');
+require("dotenv").config();
 
 const app = express();
 app.use(express.json());
@@ -9,7 +10,15 @@ const PORT = process.env.PORT || 4000;
 
 
 async function scrapeClassAttendance(userName, password) {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+        args: [
+            "--disable-setuid-sandbox",
+            "--no-sandbox",
+            "--single-process",
+            "--no-zygote",
+        ],
+        executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+    });
     try{
     const page = await browser.newPage();
     await page.goto('https://erp.rkgit.edu.in/', { waitUntil: 'networkidle2' });
