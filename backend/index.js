@@ -73,6 +73,12 @@ async function scrapeClassAttendance(userName, password) {
 }
 
 
+app.get("/test", (req, res) => {
+    res.status(200).json({
+        message: "The backend is working fine"
+    })
+})
+
 app.post('/api/attendance', async (req, res) => {
     const { userName, password } = req.body;
     console.log(userName);
