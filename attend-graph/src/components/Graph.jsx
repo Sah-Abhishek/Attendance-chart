@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
+
 const AttendanceChart = ({ dates, percentages }) => {
     const [lineChartData, setLineChartData] = useState({
         labels: [],
