@@ -8,10 +8,7 @@ app.use(cors());
 
 
 async function scrapeClassAttendance(userName, password) {
-    const browser = await puppeteer.launch({
-        headless: false,
-        args: ['--start-maximized']
-    });
+    const browser = await puppeteer.launch();
 
     const page = await browser.newPage();
     await page.goto('https://erp.rkgit.edu.in/', { waitUntil: 'networkidle2' });
