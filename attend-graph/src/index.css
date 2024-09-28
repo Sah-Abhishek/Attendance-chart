@@ -1,7 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+input:-webkit-autofill {
+  -webkit-text-fill-color: #4A5568; /* Tailwind's gray-700 */
+}
 
 
 

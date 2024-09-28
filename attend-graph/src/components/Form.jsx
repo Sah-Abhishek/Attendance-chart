@@ -11,6 +11,7 @@ const SimpleForm = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loader, setLoader] = useState('');
   const [loading, setLoading] = useState(false); // Loader State
   const [avgPercentages, setAvgPercentages] = useState([]);
 
@@ -20,7 +21,8 @@ const SimpleForm = () => {
 
     try {
       setSuccess('');
-      const response = await axios.post('http://localhost:4000/api/attendance', {
+      setLoader('')
+      const response = await axios.post('http://localhost:3000/api/attendance', {
         userName,
         password,
       });
@@ -82,7 +84,7 @@ const SimpleForm = () => {
     {loading && <p style={{ color: 'blue' }}>Fetching...</p>}
     
 
-    <AttendanceChart dates={dates} percentages={percentages} avgPercentages={avgPercentages}/>
+    <AttendanceChart dates={dates} percentages={percentages} avgPercentages={avgPercentages} loading={loading} />
     </>
   );
 };

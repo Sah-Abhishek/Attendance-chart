@@ -6,7 +6,7 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 3000;
 
 
 async function scrapeClassAttendance(userName, password) {
