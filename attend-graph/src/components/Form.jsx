@@ -12,18 +12,21 @@ const SimpleForm = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false); // Loader State
+  const [avgPercentages, setAvgPercentages] = useState([]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true); // Start Loading
 
     try {
+      setSuccess('');
       const response = await axios.post('http://localhost:4000/api/attendance', {
         userName,
         password,
       });
       setDates(response.data.dates);
       setPercentages(response.data.percentages);
+      setAvgPercentages(response.data.avgPercentages);
       console.log(dates);
       
 
@@ -42,10 +45,12 @@ const SimpleForm = () => {
     <>
     <form  style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', margin: '0 auto' }}>
       <div>
-        <label htmlFor="username">Username:</label>
+        <label htmlFor="username" className='hidden'>Username:</label>
         <input
           type="text"
           id="username"
+          placeholder='Username'
+          className='bg-gray-200 border rounded-lg text-gray-600 font-extrabold pr-4 focus:outline-none'
           value={userName}
           onChange={(e) => setUsername(e.target.value)}
           required
@@ -53,17 +58,19 @@ const SimpleForm = () => {
         />
       </div>
       <div>
-        <label htmlFor="password">Password:</label>
+        <label htmlFor="password" className='hidden' >Password:</label>
         <input
-          type="password"
+          type="text"
           id="password"
+          placeholder='Password'
+          className='bg-gray-200 border rounded-lg text-gray-600 font-extrabold px-3 focus:outline-none'
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
           style={{ margin: '10px 0', padding: '8px' }}
         />
       </div>
-      <button onClick={handleSubmit} type="submit" style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}>
+      <button onClick={handleSubmit} type="submit" className='bg-blue-500 py-2 mt-5 text-white border font-extrabold rounded-lg hover:bg-blue-400'>
         Submit
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
@@ -72,10 +79,10 @@ const SimpleForm = () => {
     </form>
     <br />
     <br />
-    {loading && <p style={{ color: 'blue' }}>Loading...</p>}
+    {loading && <p style={{ color: 'blue' }}>Fetching...</p>}
     
 
-    <AttendanceChart dates={dates} percentages={percentages}/>
+    <AttendanceChart dates={dates} percentages={percentages} avgPercentages={avgPercentages}/>
     </>
   );
 };

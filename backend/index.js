@@ -11,13 +11,7 @@ const port = process.env.PORT || 4000;
 
 async function scrapeClassAttendance(userName, password) {
     const browser = await puppeteer.launch({
-        args: [
-            "--disable-setuid-sandbox",
-            "--no-sandbox",
-            "--single-process",
-            "--no-zygote",
-        ],
-        executablePath: process.env.NODE_ENV === 'production' ? process.env.PUPPETEER_EXECUTABLE_PATH : puppeteer.executablePath(),
+        headless: true
     });
     try{
     const page = await browser.newPage();
@@ -66,7 +60,38 @@ async function scrapeClassAttendance(userName, password) {
         data: row
     }));
 
+    const presents = jsonData.map(row => row.data[row.data.length-3]);
+    console.log("These are the presents on the daily basis: ", presents);
+    const tClasses = jsonData.map(row => row.data[row.data.length - 2]);
+
+    tClasses.splice(0, 3);
+    tClasses.splice(tClasses.length-2, 2);
+    presents.splice(0,3);
+    presents.splice(presents.length - 2, 2);
+
+    let sumTclasses = 0;
+    let sumPresents = 0;
+    let avgPercent = 0;
+    console.log("This is the type of tClasses elements", typeof(tClasses[5]));
+    console.log("This is the type of presents element", typeof(presents[5]));
+    const avgPercentages = [];
+    for(i = 0; i < tClasses.length; i++){
+        sumTclasses = sumTclasses + parseInt(tClasses[i]);
+        tClasses[i] = sumTclasses;
+        sumPresents = sumPresents + parseInt(presents[i]);
+        presents[i] = sumPresents;
+        avgPercent = ((presents[i] / tClasses[i]) * 100).toFixed(2);
+        avgPercentages.push(avgPercent);
+    }
+    
+
+
+
+
+
     await browser.close();
+    // console.log("This is everything that is fetched", jsonData);
+
 
     const dates = jsonData.map(row => row.data[0]);
     let percentages = jsonData.map(row => row.data[row.data.length - 1]);
@@ -78,7 +103,7 @@ async function scrapeClassAttendance(userName, password) {
     
     percentages = percentages.map(p => p.replace('%', ''));
 
-    return { dates, percentages };
+    return { dates, percentages, presents, tClasses, avgPercentages };
     }catch (error){
         console.log("There was an error while scraping", error);
     }finally{
@@ -99,12 +124,16 @@ app.post('/api/attendance', async (req, res) => {
     console.log(password);
 
     try{
-        const { dates, percentages } = await scrapeClassAttendance(userName, password);
-        console.log(percentages);
-        console.log(dates);
+        const { dates, percentages, presents, tClasses, avgPercentages } = await scrapeClassAttendance(userName, password);
+        console.log("Thses are the percentages", percentages);
+        console.log("These are the dates", dates);
+        // console.log(jsonData);
+        console.log("These are the total claases on daily basis", tClasses);
+        console.log("These are the presents", presents);
         res.status(200).json({
             dates,
-            percentages
+            percentages,
+            avgPercentages
         });
     }catch(error){
         res.status(500).json({

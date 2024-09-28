@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
 
-const AttendanceChart = ({ dates, percentages }) => {
+const AttendanceChart = ({ dates, percentages, avgPercentages }) => {
     const [lineChartData, setLineChartData] = useState({
         labels: [],
         datasets: [
@@ -16,7 +16,7 @@ const AttendanceChart = ({ dates, percentages }) => {
         ]
     });
 
-    const handleScrape = async () => {
+    useEffect(() => {
 
         // const { dates, percentages } = await scrapeClassAttendance(userName, password);
         setLineChartData({
@@ -28,19 +28,23 @@ const AttendanceChart = ({ dates, percentages }) => {
                     borderColor: "rgb(75, 192, 192)",
                     fill: true,
                     backgroundColor: "rgba(62, 149, 205, 0.1)",
-                }
-            ]
+                    lineTension: 0.4,
+                },
+                {
+                    label: "daily average Percentage",
+                    data: avgPercentages,
+                    borderColor: "rgb(255, 0, 192)",
+                    fill: true,
+                    backgroundColor: "rgba(255, 102, 102, 0.9)",
+                    lineTension: 0.4,
+                },
+            ],
+            
         });
-    };
+    },[dates]);
 
     return (
         <div className="p-4 bg-white shadow-lg rounded-lg">
-            <button 
-                onClick={handleScrape} 
-                style={{ padding: '10px', backgroundColor: '#007bff', color: 'white', border: 'none', borderRadius: '5px' }}
-            >
-                Plot the Attendance
-            </button>
             <div > {/* Set height for the chart */}
                 <Line data={lineChartData} height={"45%"} width={"100%"}/>
             </div>
